@@ -1,0 +1,5 @@
+{
+    "poll_interval": 5,
+    "alert_period": 200,
+    "hosts": "www.dynatrace.com:443,www.keptn.sh:443"
+}

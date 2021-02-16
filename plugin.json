@@ -1,0 +1,74 @@
+{
+    "name": "custom.remote.python.ssl_cert_expiration_check",
+	"version": "1.000",
+	"type": "python",
+	"entity": "CUSTOM_DEVICE",
+	"metricGroup": "tech.CertificateCheck",
+	"technologies": ["SSL/TLS Certificates"],
+	"favicon": "https://img.icons8.com/windows/32/000000/tls.png",
+    "source": {
+        "package": "cert_expiration_plugin",
+		"className": "CertificatesCheckPlugin",
+		"install_requires": ["requests>=2.6.0"],
+		"activation": "Remote"
+    },
+    "ConfigUI": {
+        "displayName": "SSL/TLS Certificate expiration check",
+		"properties": [
+		{   "key": "poll_interval", "displayName": "Frecuency", "displayOrder": 1, "displayHint": "How often a certificate should be checked in minutes"    },
+		{   "key": "alert_period", "displayName": "Problem Alert Threshold", "displayOrder": 2, "displayHint": "Threshold to raise a Problem before expiration in days" },
+		{   "key": "hosts", "displayName": "Hosts", "displayOrder": 3, "displayHint": "Comma seperated list of the Host certificates to monitor eg. www.dynatrace.com:443,www.keptn.sh:443" }
+	]
+    },
+    "properties": [
+        {
+            "key": "poll_interval", 
+            "type": "Integer", 
+            "defaultValue": 1440
+        },
+        {
+            "key": "alert_period", 
+            "type": "Integer", 
+            "defaultValue": 14
+        },
+        {
+            "key": "hosts", 
+            "type": "Textarea"    
+        }
+    ],
+    "metrics": [
+        {
+            "entity": "CUSTOM_DEVICE", 
+            "statetimeseries": {
+                "key": "certificate_state",
+                "states": ["Expiration Ok", "Expiration Soon"],
+                "dimensions": [],
+                "displayname": "Certificate state"
+            }       
+        }
+    ],
+    "ui": {
+        "keymetrics": [
+            {
+                "key": "certificate_state",
+                "displayname": "Certificate state",
+                "statemetric": true
+            }
+        ],
+        "charts": [
+            {
+                "group": "States",
+                "title": "Certificate state chart",
+                "series": [
+                    {
+                        "key": "certificate_state",
+                        "displayname": "Certificate chart",
+                        "seriestype": "bar",
+                        "statecolors": ["#008cdb", "#ed2828"],
+                        "statechart": true
+                    }
+                ]
+            }
+        ]
+    }
+}
