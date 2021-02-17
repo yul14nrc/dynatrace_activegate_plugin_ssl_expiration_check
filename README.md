@@ -2,7 +2,7 @@
 
 This plugin checks the TLS/SSL certificates expiration date of URLs entered using the GUI and creates a problem if the certificate expiration days meet the threshold. Also, ingest the metric of the days remaining to be able to create custom charts and custom alerts if it's required.
 
-[problem](/images/problem.png)
+![problem](/images/problem.png)
 
 imagen evento
 
