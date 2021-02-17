@@ -2,7 +2,7 @@
 
 This plugin checks the TLS/SSL certificates expiration date of URLs entered using the GUI and creates a problem if the certificate expiration days meet the threshold. Also, ingest the metric of the days remaining to be able to create custom charts and custom alerts if it's required.
 
-imagen problema
+[problem](/images/problem.png)
 
 imagen evento
 
@@ -35,14 +35,13 @@ Upload the plugin to your Dynatrace tenant using the GUI: Settings --> Custom Ex
  * Choose ActiveGate: The Windows or Linux Active Gate that the plugin is running on.
 
  ### Linux Environment ActiveGate Server
- Unzip the plugin's zip file in the opt/dynatrace/remotepluginmodule/plugin_deployment directory.
- Move the hosts.txt file to the /opt/dynatrace/remotepluginmodule/agent/lib64/ directory.
-
- Restart The Remote plugin service : service remotepluginmodule restart
-
+ 1. Copy the plugin's zip file in the Environment ActiveGate Server.
+ 2. Unzip the plugin's zip file in **/opt/dynatrace/remotepluginmodule/plugin_deployment/** directory.
+ 3. Restart the remote plugin service using **service remotepluginmodule restart**
+ 
 ## Troubleshooting
 
-### Linux Environment Active Gate
+### Linux Environment ActiveGate
 Check the Remote plugin logs in : /var/lib/dynatrace/remotepluginmodule/log/remoteplugin
 
 Also you will find a folder with the name of your extension eg. **custom.remote.python.ssl_cert_expiration_check**, inside you will find the log with the name of your main class **CertificatesCheckPlugin.log** that contains all the info that you are logging from python.
