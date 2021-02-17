@@ -12,7 +12,7 @@
 		"install_requires": ["requests>=2.6.0"],
 		"activation": "Remote"
     },
-    "ConfigUI": {
+    "configUI": {
         "displayName": "SSL/TLS Certificate expiration check",
 		"properties": [
 		{   "key": "poll_interval", "displayName": "Frecuency", "displayOrder": 1, "displayHint": "How often a certificate should be checked in minutes"    },
@@ -41,11 +41,12 @@
             "entity": "CUSTOM_DEVICE", 
             "statetimeseries": {
                 "key": "certificate_state",
-                "states": ["Expiration Ok", "Expiration Soon"],
+                "states": ["ExpirationOk", "ExpirationSoon"],
                 "dimensions": [],
                 "displayname": "Certificate state"
             }       
-        }
+        },
+        { "timeseries": { "key": "certificate_days_remaining", "unit": "Count", "displayname": "TLS/SSL Certificate days remaining", "aggregation": "AVG" }, "entity": "CUSTOM_DEVICE"}
     ],
     "ui": {
         "keymetrics": [
@@ -53,11 +54,16 @@
                 "key": "certificate_state",
                 "displayname": "Certificate state",
                 "statemetric": true
+            },
+            {
+                "key": "certificate_days_remaining",
+                "displayname": "TLS/SSL Certificate days remaining",
+                "statemetric": false
             }
         ],
-        "charts": [
+        "keycharts": [
             {
-                "group": "States",
+                "group": "Certificate state",
                 "title": "Certificate state chart",
                 "series": [
                     {
@@ -67,6 +73,17 @@
                         "statecolors": ["#008cdb", "#ed2828"],
                         "statechart": true
                     }
+                ]
+            },
+            {
+                "group": "TLS/SSL Certificate expiration",
+                "title": "TLS/SSL Certificate expiration",
+                "series": [ {
+                    "key": "certificate_days_remaining",
+                    "displayname": "Expiration days remaining",
+                    "seriestype": "area",
+                    "color": "#008cdb"
+                }
                 ]
             }
         ]

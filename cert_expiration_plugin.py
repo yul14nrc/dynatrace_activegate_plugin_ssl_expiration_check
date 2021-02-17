@@ -45,7 +45,7 @@ class CertificatesCheckPlugin(RemoteBasePlugin):
         if self.should_poll_cert():
             self.poll_hosts()
         else:
-            logger.info("Hosts not being polled: current=%s < frecuency=%s",self.absolute_iterations, self.poll_period)
+            logger.info("Hosts not being polled: current=%s <= frecuency=%s",self.absolute_iterations - 1,self.poll_period)
 
         for domainnames, msgs, expiration in self.checked_domains:
             if expiration:
@@ -118,15 +118,22 @@ class CertificatesCheckPlugin(RemoteBasePlugin):
                 days = days_between(str(expiration))
                 device = group.create_device(identifier=domainnames[0],
                                         display_name=domainnames[0])
-                if int(days) <= int(self.default_expiry_err):
-                    logger.info("Logging Problem Alert for Domain: %s, Warning: The certificate expires on %s, %s days", domainnames, expiration, days)
+
+                if int(days) > int(self.default_expiry_err):
+                    logger.info("Logging for Domain: %s, Info: The certificate expires on %s, %s days", domainnames, expiration, days)
                     logger.info("Logging Topology: group name=%s, node name=%s", group.name, device.name)
-                    device.state_metric("certificate_state", "Expiration Soon")
+                    device.state_metric("certificate_state", "ExpirationOk")
+                    device.absolute("certificate_days_remaining", days)
+                
+                if int(days) <= int(self.default_expiry_err):
+                    logger.info("Logging Problem Alert for Domain: %s, Error: The certificate expires on %s, %s days", domainnames, expiration, days)
+                    logger.info("Logging Topology: group name=%s, node name=%s", group.name, device.name)
+                    device.state_metric("certificate_state", "ExpirationSoon")
+                    device.absolute("certificate_days_remaining", days)
                     device.report_error_event(title="SSL/TLS certificate expiration within the alert threshold set: " + str(self.default_expiry_err) + " days",
                                 description="The SSL/TLS cerficate will expire in: "+ days +" days",
                                 properties={"Certificate expiration date": str(expiration), "Certificate expiration days remaining": str(days)})
-                else:
-                    device.state_metric("certificate_state", "Expiration OK")
+
             else:
                 self.initial_iteration = True
                 logger.info("Skipping certificate check to prevent spam: %s",self.absolute_iterations - 1)
@@ -140,8 +147,6 @@ class CertificatesCheckPlugin(RemoteBasePlugin):
             logger.error("Host URL invalid: verify the host URL in the dynatrace UI")
             #self.domains = list(check_tls_certificate.itertools.chain(
                 #check_tls_certificate.domain_definitions_from_filename(self.path + "/hosts.txt")))
-   
-        logger.info("Iterations: %s",self.absolute_iterations)
         
         self.domain_certs = check_tls_certificate.get_domain_certs(self.domains)
         self.exceptions = list(x for x in self.domain_certs.values() if isinstance(x, Exception))
