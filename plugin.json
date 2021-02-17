@@ -37,24 +37,10 @@
         }
     ],
     "metrics": [
-        {
-            "entity": "CUSTOM_DEVICE", 
-            "statetimeseries": {
-                "key": "certificate_state",
-                "states": ["ExpirationOk", "ExpirationSoon"],
-                "dimensions": [],
-                "displayname": "Certificate state"
-            }       
-        },
         { "timeseries": { "key": "certificate_days_remaining", "unit": "Count", "displayname": "TLS/SSL Certificate days remaining", "aggregation": "AVG" }, "entity": "CUSTOM_DEVICE"}
     ],
     "ui": {
         "keymetrics": [
-            {
-                "key": "certificate_state",
-                "displayname": "Certificate state",
-                "statemetric": true
-            },
             {
                 "key": "certificate_days_remaining",
                 "displayname": "TLS/SSL Certificate days remaining",
@@ -62,19 +48,6 @@
             }
         ],
         "keycharts": [
-            {
-                "group": "Certificate state",
-                "title": "Certificate state chart",
-                "series": [
-                    {
-                        "key": "certificate_state",
-                        "displayname": "Certificate chart",
-                        "seriestype": "bar",
-                        "statecolors": ["#008cdb", "#ed2828"],
-                        "statechart": true
-                    }
-                ]
-            },
             {
                 "group": "TLS/SSL Certificate expiration",
                 "title": "TLS/SSL Certificate expiration",
